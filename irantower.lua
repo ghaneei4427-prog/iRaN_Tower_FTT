@@ -9,6 +9,24 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
+
+-- AM1R movement settings
+-- For your own Roblox Studio experience
+
+local DEFAULT_SPEED = 300
+local DEFAULT_JUMP = 200
+
+local speedButton = makeButton("⚡ Speed: 300", 334)
+local jumpButton = makeButton("🦘 Jump: 200", 377)
+
+speedButton.Activated:Connect(function()
+    setStatus("سرعت انتخاب‌شده: " .. DEFAULT_SPEED)
+end)
+
+jumpButton.Activated:Connect(function()
+    setStatus("قدرت پرش انتخاب‌شده: " .. DEFAULT_JUMP)
+end)
+
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
