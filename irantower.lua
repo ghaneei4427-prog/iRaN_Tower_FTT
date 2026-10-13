@@ -1,296 +1,329 @@
 
 --[[
-    🇮🇷 Iran Tower Mobile Training Panel
-    ساخته شده توسط AM1RFTT
-    رایگان برای لذت بردن شما ♡
-    برای تجربه‌ی خودت در Roblox Studio
+    AM1R • NEON
+    Custom Mobile Panel
+    Created by AM1R ♡
+    For your own Roblox Studio experience
 ]]
 
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
-local old = playerGui:FindFirstChild("IranTowerMobile")
-if old then old:Destroy() end
+local GUI_NAME = "AM1R_NeonPanel"
 
-local oldReopen = playerGui:FindFirstChild("AM1RFTT_Reopen")
-if oldReopen then oldReopen:Destroy() end
+-- Remove previous copy
+local old = playerGui:FindFirstChild(GUI_NAME)
+if old then
+    old:Destroy()
+end
 
-local purple = Color3.fromRGB(151, 90, 255)
-local dark = Color3.fromRGB(23, 21, 37)
-local card = Color3.fromRGB(42, 37, 59)
-local white = Color3.fromRGB(250, 247, 255)
-local muted = Color3.fromRGB(195, 185, 215)
-local green = Color3.fromRGB(125, 255, 180)
+-- Theme
+local GREEN = Color3.fromRGB(57, 255, 135)
+local DARK = Color3.fromRGB(10, 17, 14)
+local CARD = Color3.fromRGB(22, 36, 30)
+local WHITE = Color3.fromRGB(240, 255, 246)
+local MUTED = Color3.fromRGB(160, 195, 174)
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "IranTowerMobile"
+gui.Name = GUI_NAME
 gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 gui.Parent = playerGui
 
-local function round(object, radius)
+-- Helpers
+local function round(obj, radius)
     local c = Instance.new("UICorner")
     c.CornerRadius = UDim.new(0, radius)
-    c.Parent = object
+    c.Parent = obj
 end
 
-local function outline(object, color, thickness)
+local function stroke(obj, color, thickness)
     local s = Instance.new("UIStroke")
-    s.Color = color or purple
+    s.Color = color or GREEN
     s.Thickness = thickness or 1
-    s.Transparency = 0.15
-    s.Parent = object
+    s.Transparency = 0.12
+    s.Parent = obj
 end
 
+local function tween(obj, props, duration)
+    local t = TweenService:Create(
+        obj,
+        TweenInfo.new(
+            duration or 0.2,
+            Enum.EasingStyle.Quart,
+            Enum.EasingDirection.Out
+        ),
+        props
+    )
+    t:Play()
+    return t
+end
+
+-- Main panel
 local panel = Instance.new("Frame")
-panel.Name = "MainPanel"
-panel.Size = UDim2.new(0, 290, 0, 510)
-panel.Position = UDim2.new(0, 12, 0.5, -255)
-panel.BackgroundColor3 = dark
+panel.Name = "Main"
+panel.Size = UDim2.fromOffset(280, 375)
+panel.Position = UDim2.new(0, 12, 0.5, -187)
+panel.BackgroundColor3 = DARK
 panel.BorderSizePixel = 0
 panel.Parent = gui
-round(panel, 18)
-outline(panel, purple, 2)
+round(panel, 16)
+stroke(panel, GREEN, 2)
 
-local panelLimit = Instance.new("UISizeConstraint")
-panelLimit.MinSize = Vector2.new(260, 480)
-panelLimit.MaxSize = Vector2.new(330, 530)
-panelLimit.Parent = panel
+local panelScale = Instance.new("UIScale")
+panelScale.Scale = 1
+panelScale.Parent = panel
 
+-- Header
 local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 82)
-header.BackgroundColor3 = Color3.fromRGB(59, 39, 91)
+header.Size = UDim2.new(1, 0, 0, 68)
+header.BackgroundColor3 = Color3.fromRGB(17, 56, 36)
 header.BorderSizePixel = 0
 header.Parent = panel
-round(header, 18)
+round(header, 15)
 
-local function label(text, y, height, size, color)
-    local l = Instance.new("TextLabel")
-    l.Size = UDim2.new(1, -20, 0, height)
-    l.Position = UDim2.fromOffset(10, y)
-    l.BackgroundTransparency = 1
-    l.Text = text
-    l.TextColor3 = color or white
-    l.TextSize = size or 14
-    l.TextWrapped = true
-    l.Font = Enum.Font.GothamBold
-    l.Parent = panel
-    return l
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -18, 0, 30)
+title.Position = UDim2.fromOffset(9, 5)
+title.BackgroundTransparency = 1
+title.Text = "AM1R  •  NEON"
+title.TextColor3 = GREEN
+title.TextSize = 20
+title.Font = Enum.Font.GothamBlack
+title.Parent = header
+
+local subtitle = Instance.new("TextLabel")
+subtitle.Size = UDim2.new(1, -18, 0, 22)
+subtitle.Position = UDim2.fromOffset(9, 35)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "MOBILE CONTROL CENTER  ♡"
+subtitle.TextColor3 = WHITE
+subtitle.TextSize = 10
+subtitle.Font = Enum.Font.GothamMedium
+subtitle.Parent = header
+
+-- Welcome
+local welcome = Instance.new("TextLabel")
+welcome.Size = UDim2.new(1, -20, 0, 38)
+welcome.Position = UDim2.fromOffset(10, 75)
+welcome.BackgroundTransparency = 1
+welcome.Text = "سلام رفیق! خوش اومدی ♡\nپنل اختصاصی AM1R"
+welcome.TextColor3 = WHITE
+welcome.TextSize = 12
+welcome.TextWrapped = true
+welcome.Font = Enum.Font.GothamMedium
+welcome.Parent = panel
+
+-- Status card
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, -20, 0, 36)
+status.Position = UDim2.fromOffset(10, 117)
+status.BackgroundColor3 = CARD
+status.BorderSizePixel = 0
+status.Text = "●  سیستم آماده است"
+status.TextColor3 = GREEN
+status.TextSize = 12
+status.TextWrapped = true
+status.Font = Enum.Font.GothamBold
+status.Parent = panel
+round(status, 9)
+
+local function setStatus(message, color)
+    status.Text = message
+    status.TextColor3 = color or GREEN
 end
 
-local creator = Instance.new("TextLabel")
-creator.Size = UDim2.new(1, -12, 0, 29)
-creator.Position = UDim2.fromOffset(6, 8)
-creator.BackgroundTransparency = 1
-creator.Text = "ساخته شده توسط AM1RFTT"
-creator.TextColor3 = Color3.fromRGB(224, 201, 255)
-creator.TextSize = 17
-creator.Font = Enum.Font.GothamBold
-creator.TextWrapped = true
-creator.Parent = header
-
-local heading = Instance.new("TextLabel")
-heading.Size = UDim2.new(1, -12, 0, 25)
-heading.Position = UDim2.fromOffset(6, 43)
-heading.BackgroundTransparency = 1
-heading.Text = "🇮🇷 IRAN TOWER  •  MOBILE"
-heading.TextColor3 = white
-heading.TextSize = 13
-heading.Font = Enum.Font.GothamBold
-heading.Parent = header
-
-label("سلام ممبرهای عزیز! ♡", 88, 26, 16)
-
-local welcome = label(
-    "این اسکریپت برای لذت بردن شماست و کاملاً رایگان هستش!\nامیدوارم لذت ببرید ♡",
-    115, 43, 12, muted
-)
-welcome.Font = Enum.Font.GothamMedium
-
-local status = label("● پنل آماده است", 160, 28, 12, green)
-
-local function makeButton(text, y, color)
+-- Button factory
+local function makeButton(text, y)
     local b = Instance.new("TextButton")
-    b.Size = UDim2.new(1, -20, 0, 36)
+    b.Size = UDim2.new(1, -20, 0, 37)
     b.Position = UDim2.fromOffset(10, y)
-    b.BackgroundColor3 = color or card
+    b.BackgroundColor3 = CARD
     b.BorderSizePixel = 0
     b.Text = text
-    b.TextColor3 = white
-    b.TextSize = 13
+    b.TextColor3 = WHITE
+    b.TextSize = 12
     b.TextWrapped = true
     b.Font = Enum.Font.GothamBold
-    b.AutoButtonColor = true
+    b.AutoButtonColor = false
     b.Parent = panel
-    round(b, 10)
-    outline(b, purple, 1)
+
+    round(b, 9)
+    stroke(b, GREEN, 1)
+
+    b.MouseEnter:Connect(function()
+        tween(b, {
+            BackgroundColor3 = Color3.fromRGB(30, 65, 43)
+        }, 0.12)
+    end)
+
+    b.MouseLeave:Connect(function()
+        tween(b, {BackgroundColor3 = CARD}, 0.12)
+    end)
+
+    b.Activated:Connect(function()
+        tween(b, {
+            BackgroundColor3 = Color3.fromRGB(38, 90, 54)
+        }, 0.06)
+
+        task.delay(0.12, function()
+            if b.Parent then
+                tween(b, {BackgroundColor3 = CARD}, 0.12)
+            end
+        end)
+    end)
+
     return b
 end
 
-local function makeNumberBox(title, y, value)
-    local t = Instance.new("TextLabel")
-    t.Size = UDim2.new(0.52, -8, 0, 32)
-    t.Position = UDim2.fromOffset(12, y)
-    t.BackgroundTransparency = 1
-    t.Text = title
-    t.TextColor3 = white
-    t.TextSize = 12
-    t.TextWrapped = true
-    t.Font = Enum.Font.GothamBold
-    t.Parent = panel
+local stageButton = makeButton("🏁  نمایش مرحله فعلی", 162)
+local checkpointButton = makeButton("📍  نزدیک‌ترین چک‌پوینت", 205)
+local refreshButton = makeButton("↻  به‌روزرسانی وضعیت", 248)
+local hideButton = makeButton("×  مخفی کردن پنل", 291)
 
-    local box = Instance.new("TextBox")
-    box.Size = UDim2.new(0.36, 0, 0, 32)
-    box.Position = UDim2.new(0.61, 0, 0, y)
-    box.BackgroundColor3 = card
-    box.BorderSizePixel = 0
-    box.TextColor3 = white
-    box.PlaceholderColor3 = muted
-    box.PlaceholderText = "عدد"
-    box.Text = tostring(value)
-    box.TextSize = 14
-    box.Font = Enum.Font.GothamBold
-    box.ClearTextOnFocus = false
-    box.Parent = panel
-    round(box, 8)
-    outline(box, purple, 1)
-
-    return box
-end
-
-local speed = 16
-local jump = 50
-
-local speedBox = makeNumberBox("سرعت حرکت", 194, speed)
-local jumpBox = makeNumberBox("قدرت پرش", 232, jump)
-
-local function getHumanoid()
-    local character = player.Character
-    return character and character:FindFirstChildOfClass("Humanoid")
-end
-
-makeButton("✦ اعمال سرعت و پرش", 272,
-    Color3.fromRGB(91, 56, 145)).Activated:Connect(function()
-
-    local s = tonumber(speedBox.Text)
-    local j = tonumber(jumpBox.Text)
-
-    if not s or not j then
-        status.Text = "⚠️ لطفاً عدد معتبر وارد کن"
-        status.TextColor3 = Color3.fromRGB(255, 190, 110)
-        return
-    end
-
-    speed = math.clamp(s, 16, 32)
-    jump = math.clamp(j, 50, 100)
-
-    speedBox.Text = tostring(speed)
-    jumpBox.Text = tostring(jump)
-
-    local humanoid = getHumanoid()
-    if not humanoid then
-        status.Text = "شخصیت هنوز آماده نیست"
-        status.TextColor3 = Color3.fromRGB(255, 190, 110)
-        return
-    end
-
-    humanoid.WalkSpeed = speed
-    humanoid.UseJumpPower = true
-    humanoid.JumpPower = jump
-
-    status.Text = "✓ تنظیمات اعمال شدند ♡"
-    status.TextColor3 = green
-end)
-
-makeButton("🏁 نمایش مرحله فعلی", 314).Activated:Connect(function()
+-- Stage information
+stageButton.Activated:Connect(function()
     local stats = player:FindFirstChild("leaderstats")
     local stage = stats and (
         stats:FindFirstChild("Stage")
         or stats:FindFirstChild("Checkpoint")
-        or stats:FindFirstChild("مرحله")
+        or stats:FindFirstChild("Level")
     )
 
     if stage then
-        status.Text = "🏁 مرحله: " .. tostring(stage.Value)
-        status.TextColor3 = white
+        setStatus("🏁  مرحله: " .. tostring(stage.Value))
     else
-        status.Text = "اطلاعات مرحله پیدا نشد"
-        status.TextColor3 = muted
+        setStatus("اطلاعات مرحله پیدا نشد", MUTED)
     end
 end)
 
-makeButton("📍 نزدیک‌ترین چک‌پوینت", 356).Activated:Connect(function()
+-- Nearest checkpoint
+checkpointButton.Activated:Connect(function()
     local folder = workspace:FindFirstChild("Checkpoints")
     local character = player.Character
-    local root = character and character:FindFirstChild("HumanoidRootPart")
+    local root = character and
+        character:FindFirstChild("HumanoidRootPart")
 
-    if not folder or not root then
-        status.Text = "چک‌پوینت‌ها در دسترس نیستند"
+    if not root then
+        setStatus("شخصیت هنوز آماده نیست", MUTED)
         return
     end
 
-    local nearest
+    if not folder then
+        setStatus("پوشه Checkpoints پیدا نشد", MUTED)
+        return
+    end
+
+    local nearest = nil
     local bestDistance = math.huge
 
     for _, point in ipairs(folder:GetDescendants()) do
         if point:IsA("BasePart") then
-            local distance = (root.Position - point.Position).Magnitude
+            local distance =
+                (root.Position - point.Position).Magnitude
 
             if distance < bestDistance then
-                nearest = point
                 bestDistance = distance
+                nearest = point
             end
         end
     end
 
     if nearest then
-        status.Text = nearest.Name .. " | " ..
+        setStatus(
+            "📍 " .. nearest.Name .. " | " ..
             math.floor(bestDistance) .. " studs"
-        status.TextColor3 = white
+        )
     else
-        status.Text = "چک‌پوینتی پیدا نشد"
+        setStatus("چک‌پوینتی پیدا نشد", MUTED)
     end
 end)
 
-makeButton("➡️ راهنمای چک‌پوینت بعدی", 398).Activated:Connect(function()
-    status.Text = "برای راهنمایی دقیق، مراحل بازی خودت را وصل کن"
-    status.TextColor3 = muted
+-- Refresh
+refreshButton.Activated:Connect(function()
+    local character = player.Character
+    local humanoid = character and
+        character:FindFirstChildOfClass("Humanoid")
+
+    if humanoid then
+        setStatus(
+            "♥ آماده | HP: " ..
+            math.floor(humanoid.Health) .. "/" ..
+            math.floor(humanoid.MaxHealth)
+        )
+    else
+        setStatus("در انتظار آماده‌شدن شخصیت...", MUTED)
+    end
 end)
 
-local hideButton = makeButton("مخفی کردن پنل  ×", 440,
-    Color3.fromRGB(72, 39, 76))
-
+-- Reopen button
 local reopen = Instance.new("TextButton")
-reopen.Name = "AM1RFTT_Reopen"
-reopen.Size = UDim2.fromOffset(55, 55)
-reopen.Position = UDim2.new(1, -70, 0.55, 0)
-reopen.BackgroundColor3 = Color3.fromRGB(91, 56, 145)
+reopen.Name = "ReopenButton"
+reopen.Size = UDim2.fromOffset(48, 48)
+reopen.Position = UDim2.new(1, -62, 0.55, 0)
+reopen.BackgroundColor3 = Color3.fromRGB(17, 56, 36)
 reopen.BorderSizePixel = 0
-reopen.Text = "AM\n♡"
-reopen.TextColor3 = white
-reopen.TextSize = 14
-reopen.Font = Enum.Font.GothamBold
+reopen.Text = "AM1R\n♡"
+reopen.TextColor3 = GREEN
+reopen.TextSize = 12
+reopen.Font = Enum.Font.GothamBlack
 reopen.Visible = false
 reopen.Parent = gui
-round(reopen, 16)
-outline(reopen, purple, 2)
+round(reopen, 14)
+stroke(reopen, GREEN, 2)
 
+-- Hide panel
 hideButton.Activated:Connect(function()
+    tween(panel, {
+        Position = UDim2.new(0, -310, 0.5, -187)
+    }, 0.22)
+
+    task.wait(0.23)
     panel.Visible = false
     reopen.Visible = true
+    reopen.Size = UDim2.fromOffset(42, 42)
+
+    tween(reopen, {
+        Size = UDim2.fromOffset(48, 48)
+    }, 0.16)
 end)
 
+-- Show panel
 reopen.Activated:Connect(function()
-    panel.Visible = true
     reopen.Visible = false
+    panel.Visible = true
+    panel.Position = UDim2.new(0, -310, 0.5, -187)
+
+    tween(panel, {
+        Position = UDim2.new(0, 12, 0.5, -187)
+    }, 0.24)
 end)
 
-player.CharacterAdded:Connect(function(character)
-    local humanoid = character:WaitForChild("Humanoid", 10)
-    if humanoid then
-        status.Text = "● شخصیت آماده است ♡"
-        status.TextColor3 = green
-    end
-end)
+-- Keep panel usable on small screens
+local function updateScale()
+    local camera = workspace.CurrentCamera
+    if not camera then return end
 
-print("Iran Tower Mobile Panel by AM1RFTT loaded ♡")
+    local viewport = camera.ViewportSize
+    local fit = math.min(
+        1,
+        viewport.X / 320,
+        viewport.Y / 420
+    )
+
+    panelScale.Scale = math.max(0.78, fit)
+end
+
+updateScale()
+
+if workspace.CurrentCamera then
+    workspace.CurrentCamera:GetPropertyChangedSignal(
+        "ViewportSize"
+    ):Connect(updateScale)
+end
+
+print("AM1R Neon Panel loaded successfully ♡")
